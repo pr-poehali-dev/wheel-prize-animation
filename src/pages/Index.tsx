@@ -1,42 +1,24 @@
-import { useState } from 'react';
-import Wheel, { Prize } from '@/components/Wheel';
 import Icon from '@/components/ui/icon';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
 
-const LEADERS = [
-  { name: 'snickers_2302', prize: 'Админка', emoji: '⚡', score: 9999 },
-  { name: 'NeoFox', prize: 'VIP', emoji: '👑', score: 4210 },
-  { name: 'Lego_Master', prize: 'VIP', emoji: '👑', score: 3870 },
-  { name: 'KittyCat', prize: 'Промокод', emoji: '🎫', score: 2150 },
-  { name: 'DarkBro', prize: 'Промокод', emoji: '🎫', score: 1980 },
-  { name: 'Sunny99', prize: 'VPN', emoji: '🛡️', score: 1340 },
-  { name: 'PixelPro', prize: 'VPN', emoji: '🛡️', score: 1120 },
+const SUPPORT_LINK = 'https://max.ru/u/f9LHodD0cOKItwuq1SNZZJz4bHh_L2fcdvoEJOMq5JdCTbGQC3c3cUvDxHc';
+
+const PRIZES = [
+  { label: 'Стикер', emoji: '🎟️', chance: '25%', desc: 'Эксклюзивный набор стикеров канала' },
+  { label: 'VPN', emoji: '🛡️', chance: '15%', desc: 'Доступ к быстрому VPN' },
+  { label: 'Промокод', emoji: '🎫', chance: '8%', desc: 'Скидочный промокод от партнёров' },
+  { label: 'Админка', emoji: '⚡', chance: '0.1%', desc: 'Легендарный приз — права администратора' },
 ];
 
 const BADGES = [
-  { icon: 'Flame', title: 'Первый спин', desc: 'Крутани колесо впервые', got: true },
-  { icon: 'Crown', title: 'Король удачи', desc: 'Выиграй VIP-приз', got: true },
+  { icon: 'Flame', title: 'Первый приз', desc: 'Выиграй впервые', got: false },
   { icon: 'Zap', title: 'Легенда', desc: 'Получи Админку', got: false },
-  { icon: 'Repeat', title: 'Завсегдатай', desc: '50 вращений подряд', got: true },
+  { icon: 'Repeat', title: 'Завсегдатай', desc: '50 участий', got: false },
   { icon: 'Gift', title: 'Коллекционер', desc: 'Собери все призы', got: false },
   { icon: 'Trophy', title: 'Топ-1', desc: 'Возглавь таблицу', got: false },
+  { icon: 'Star', title: 'Удачливый', desc: 'Редкий приз', got: false },
 ];
 
 const Index = () => {
-  const [result, setResult] = useState<Prize | null>(null);
-  const [open, setOpen] = useState(false);
-
-  const handleResult = (prize: Prize) => {
-    setResult(prize);
-    setOpen(true);
-  };
-
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -50,7 +32,7 @@ const Index = () => {
             <span className="text-gold">snickers_2302</span>
           </div>
           <nav className="hidden gap-6 font-medium text-muted-foreground md:flex">
-            <button onClick={() => scrollTo('wheel')} className="transition-colors hover:text-primary">Колесо</button>
+            <button onClick={() => scrollTo('prizes')} className="transition-colors hover:text-primary">Призы</button>
             <button onClick={() => scrollTo('leaders')} className="transition-colors hover:text-primary">Лидеры</button>
             <button onClick={() => scrollTo('badges')} className="transition-colors hover:text-primary">Достижения</button>
             <button onClick={() => scrollTo('support')} className="transition-colors hover:text-primary">Поддержка</button>
@@ -58,53 +40,55 @@ const Index = () => {
         </div>
       </header>
 
-      {/* HERO + WHEEL */}
-      <section id="wheel" className="container relative grid items-center gap-12 py-12 md:grid-cols-2 md:py-20">
-        <div className="animate-fade-in text-center md:text-left">
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1 text-sm font-semibold text-primary">
-            <Icon name="Sparkles" size={14} /> Колесо Фортуны
-          </span>
-          <h1 className="font-display text-5xl font-bold uppercase leading-none sm:text-6xl lg:text-7xl">
-            Крути и <span className="text-gold">забирай</span> приз
-          </h1>
-          <p className="mt-5 max-w-md text-lg text-muted-foreground md:mx-0">
-            Эксклюзивное колесо призов от канала. Стикеры, VPN, промокоды, VIP и даже Админка — попытай удачу прямо сейчас!
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
-            <button onClick={() => scrollTo('leaders')} className="flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-display font-bold uppercase text-primary-foreground shadow-[0_0_20px_rgba(255,138,30,0.5)] transition-transform hover:scale-105">
-              <Icon name="Trophy" size={18} /> Таблица лидеров
-            </button>
-          </div>
-        </div>
+      {/* HERO */}
+      <section className="container relative py-14 text-center md:py-20">
+        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1 text-sm font-semibold text-primary animate-fade-in">
+          <Icon name="Sparkles" size={14} /> Розыгрыши канала
+        </span>
+        <h1 className="font-display text-5xl font-bold uppercase leading-none sm:text-6xl lg:text-7xl animate-fade-in">
+          Лента <span className="text-gold">призов</span>
+        </h1>
+        <p className="mx-auto mt-5 max-w-md text-lg text-muted-foreground animate-fade-in">
+          Эксклюзивные награды от канала snickers_2302. Участвуй в розыгрышах и забирай свой приз!
+        </p>
+      </section>
 
-        <div className="flex justify-center animate-float">
-          <Wheel onResult={handleResult} />
+      {/* PRIZES FEED */}
+      <section id="prizes" className="container py-12">
+        <SectionTitle icon="Gift" sub="Лента призов">Что можно выиграть</SectionTitle>
+        <div className="mx-auto mt-8 max-w-3xl space-y-4">
+          {PRIZES.map((p, i) => (
+            <div
+              key={p.label}
+              className="flex items-center gap-5 rounded-2xl border border-border bg-card p-5 transition-transform hover:scale-[1.02] hover:border-primary/40 animate-fade-in"
+              style={{ animationDelay: `${i * 0.08}s` }}
+            >
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-4xl">
+                {p.emoji}
+              </div>
+              <div className="flex-1">
+                <div className="font-display text-xl font-bold uppercase">{p.label}</div>
+                <div className="text-sm text-muted-foreground">{p.desc}</div>
+              </div>
+              <div className="shrink-0 rounded-full border border-secondary/40 bg-secondary/10 px-3 py-1 font-display text-sm font-bold text-gold">
+                {p.chance}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* LEADERS */}
       <section id="leaders" className="container py-16">
         <SectionTitle icon="Trophy" sub="Зал славы">Самые удачливые игроки</SectionTitle>
-        <div className="mx-auto mt-8 max-w-2xl space-y-3">
-          {LEADERS.map((l, i) => (
-            <div
-              key={l.name}
-              className={`flex items-center gap-4 rounded-xl border p-4 transition-transform hover:scale-[1.02] ${
-                i === 0
-                  ? 'border-secondary bg-gradient-to-r from-secondary/15 to-transparent'
-                  : 'border-border bg-card'
-              }`}
-            >
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-display text-lg font-bold ${i < 3 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
-                {i + 1}
-              </div>
-              <div className="flex-1">
-                <div className="font-display font-bold">{l.name}</div>
-                <div className="text-sm text-muted-foreground">{l.emoji} {l.prize}</div>
-              </div>
-              <div className="font-display text-lg font-bold text-gold">{l.score.toLocaleString()}</div>
-            </div>
-          ))}
+        <div className="mx-auto mt-8 flex max-w-2xl flex-col items-center rounded-2xl border border-dashed border-border bg-card/40 py-14 text-center">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            <Icon name="Trophy" size={30} />
+          </div>
+          <div className="font-display text-xl font-bold uppercase">Скоро здесь появятся победители</div>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Таблица лидеров заполнится реальными игроками после первых розыгрышей.
+          </p>
         </div>
       </section>
 
@@ -115,20 +99,16 @@ const Index = () => {
           {BADGES.map((b) => (
             <div
               key={b.title}
-              className={`group flex flex-col items-center rounded-2xl border p-5 text-center transition-transform hover:scale-105 ${
-                b.got ? 'border-primary/40 bg-card' : 'border-border bg-card/40 opacity-60'
-              }`}
+              className="group flex flex-col items-center rounded-2xl border border-border bg-card/40 p-5 text-center opacity-70 transition-transform hover:scale-105 hover:opacity-100"
             >
-              <div className={`mb-3 flex h-14 w-14 items-center justify-center rounded-full ${b.got ? 'bg-primary text-primary-foreground shadow-[0_0_18px_rgba(255,138,30,0.5)]' : 'bg-muted text-muted-foreground'}`}>
+              <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <Icon name={b.icon} size={26} />
               </div>
               <div className="font-display font-bold uppercase">{b.title}</div>
               <div className="mt-1 text-xs text-muted-foreground">{b.desc}</div>
-              {b.got && (
-                <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-secondary">
-                  <Icon name="Check" size={12} /> Получено
-                </span>
-              )}
+              <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground">
+                <Icon name="Lock" size={12} /> Закрыто
+              </span>
             </div>
           ))}
         </div>
@@ -137,50 +117,28 @@ const Index = () => {
       {/* SUPPORT */}
       <section id="support" className="container py-16">
         <SectionTitle icon="LifeBuoy" sub="Поддержка">Техническая поддержка</SectionTitle>
-        <div className="mx-auto mt-8 grid max-w-3xl gap-4 sm:grid-cols-3">
-          {[
-            { icon: 'Send', title: 'Telegram', val: '@snickers_2302' },
-            { icon: 'Mail', title: 'Почта', val: 'support@snickers.ru' },
-            { icon: 'MessageCircle', title: 'Чат', val: 'Онлайн 24/7' },
-          ].map((c) => (
-            <div key={c.title} className="flex flex-col items-center rounded-2xl border border-border bg-card p-6 text-center transition-transform hover:scale-105">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
-                <Icon name={c.icon} size={24} />
-              </div>
-              <div className="font-display font-bold uppercase">{c.title}</div>
-              <div className="mt-1 text-sm text-muted-foreground">{c.val}</div>
+        <div className="mx-auto mt-8 max-w-md">
+          <a
+            href={SUPPORT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center rounded-2xl border border-primary/40 bg-card p-8 text-center transition-transform hover:scale-105"
+          >
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+              <Icon name="MessageCircle" size={28} />
             </div>
-          ))}
+            <div className="font-display text-xl font-bold uppercase">Написать в поддержку</div>
+            <p className="mt-2 text-sm text-muted-foreground">Возникли вопросы? Напиши нам — поможем!</p>
+            <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2 font-display font-bold uppercase text-primary-foreground">
+              <Icon name="Send" size={16} /> Открыть чат
+            </span>
+          </a>
         </div>
       </section>
 
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        🎰 Колесо Фортуны • Канал <span className="text-gold">snickers_2302</span>
+        🎰 Лента призов • Канал <span className="text-gold">snickers_2302</span>
       </footer>
-
-      {/* RESULT DIALOG */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="glass border-primary/40 text-center sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center font-display text-3xl uppercase">
-              {result?.label === 'Ничего' ? 'Почти!' : 'Поздравляем!'}
-            </DialogTitle>
-            <DialogDescription className="text-center">
-              {result?.label === 'Ничего' ? 'В этот раз не повезло — попробуй ещё раз!' : 'Твой выигрыш:'}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="animate-pop-in py-4">
-            <div className="text-7xl">{result?.emoji}</div>
-            <div className="mt-3 font-display text-4xl font-bold text-gold uppercase">{result?.label}</div>
-          </div>
-          <button
-            onClick={() => setOpen(false)}
-            className="mx-auto rounded-full bg-primary px-8 py-3 font-display font-bold uppercase text-primary-foreground transition-transform hover:scale-105"
-          >
-            Забрать
-          </button>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
