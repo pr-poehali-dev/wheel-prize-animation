@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "name": "Admin - no key",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 403,
+      "bodyMatcher": "partial"
+    }
+  ]
+}

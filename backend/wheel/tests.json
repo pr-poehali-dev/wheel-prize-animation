@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "Balance - new user",
+      "method": "GET",
+      "path": "/?username=testuser123",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Promo - missing fields",
+      "method": "POST",
+      "path": "/promo",
+      "body": {},
+      "expectedStatus": 400,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Spin - no bricks",
+      "method": "POST",
+      "path": "/spin",
+      "body": {"username": "testuser123"},
+      "expectedStatus": 400,
+      "bodyMatcher": "partial"
+    }
+  ]
+}

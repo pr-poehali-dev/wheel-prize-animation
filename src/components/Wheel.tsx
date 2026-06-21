@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 
 export interface Prize {
@@ -29,16 +29,19 @@ function weightedPick(): number {
 
 interface WheelProps {
   onResult: (prize: Prize) => void;
+  disabled?: boolean;
+  onSpinStart?: () => void;
 }
 
-const Wheel = ({ onResult }: WheelProps) => {
+const Wheel = ({ onResult, disabled, onSpinStart }: WheelProps) => {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const seg = 360 / PRIZES.length;
 
   const spin = () => {
-    if (spinning) return;
+    if (spinning || disabled) return;
     setSpinning(true);
+    onSpinStart?.();
     const idx = weightedPick();
     const targetCenter = idx * seg + seg / 2;
     const fullTurns = 6 * 360;
@@ -94,7 +97,7 @@ const Wheel = ({ onResult }: WheelProps) => {
         {/* Center */}
         <button
           onClick={spin}
-          disabled={spinning}
+          disabled={spinning || disabled}
           className="absolute left-1/2 top-1/2 z-20 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-4 border-secondary bg-gradient-to-b from-primary to-orange-700 font-display font-bold uppercase text-primary-foreground shadow-[0_0_25px_rgba(255,138,30,0.7)] transition-transform hover:scale-105 active:scale-95 disabled:opacity-70 sm:h-20 sm:w-20"
         >
           {spinning
